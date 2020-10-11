@@ -1,6 +1,7 @@
 import pandas as pd
 
 
+
 def read(filename: str, nan_value=-999.0) -> pd.DataFrame:
     with open(filename, "r") as f:
         lines = f.readlines()
@@ -17,7 +18,7 @@ def read(filename: str, nan_value=-999.0) -> pd.DataFrame:
 
 
 def write(df: pd.DataFrame, filename: str) -> None:
-    with open(filename, "w") as f:
+    with open(filename,"w") as f:
         f.write("GSLIB Example Data\n")
         f.write(f"{len(df.columns)}\n")
         f.write("\n".join(df.columns) + "\n")
