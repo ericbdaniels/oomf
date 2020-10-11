@@ -7,4 +7,4 @@ Goals shared ont he [OMF read the docs page](https://omf.readthedocs.io/en/lates
 
 OMF is based around the [properties](https://github.com/seequent/properties) project developed by Seequent, and naturally Seequent is one of the biggest supporters of OMF. 
 
-This is a fantastic idea. Sharing data, geologic models, variograms etc across commercial software platforms and open source tools can be challenging. The OMF library Python API is does not lack functionality but it is not the most approachable way to open, manipulate or save data when working in python. The goal of OOMF, is simply make it easier to work with this file format in a more obvious and pythonic way.
+This is a fantastic idea. Sharing data, geologic models, variograms etc across commercial software platforms and open source tools can be challenging. The OMF library Python API does not lack functionality but it is not the most approachable way to open, manipulate or save data when working in python. The goal of OOMF, is simply make it easier to work with this file format in a more obvious and pythonic way.
