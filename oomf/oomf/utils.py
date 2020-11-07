@@ -14,24 +14,28 @@ class Wrapper:
     def __dir__(self):
         return dir(self._obj)
 
-def scalardata_from_df(df:pd.DataFrame, data_location:str="vertices"):
+
+def scalardata_from_df(df: pd.DataFrame, data_location: str = "vertices"):
     data = []
     for col in df.columns:
         array_vector = df[col].values.tolist()
-        idata = omf.ScalarData(
-           name=col,
-               array=array_vector,
-       location=data_location
-       )
+        idata = omf.ScalarData(name=col, array=array_vector, location=data_location)
         data.append(idata)
     return data
 
-def gridgeom_from_griddef(nx,ny,nz,xsiz,ysiz,zsiz,xmin,ymin,zmin):
+
+def gridgeom_from_griddef(nx, ny, nz, xsiz, ysiz, zsiz, xmin, ymin, zmin):
     tensor_u = np.array([xsiz for i in range(nx)])
-    tensor_v = np.array([ysiz for i in range(ny)])    
+    tensor_v = np.array([ysiz for i in range(ny)])
     tensor_w = np.array([zsiz for i in range(nz)])
-    geom = omf.volume.VolumeGridGeometry(origin=(xmin,ymin,zmin), tensor_u=tensor_u, tensor_v=tensor_v, tensor_w=tensor_w)
+    geom = omf.volume.VolumeGridGeometry(
+        origin=(xmin, ymin, zmin),
+        tensor_u=tensor_u,
+        tensor_v=tensor_v,
+        tensor_w=tensor_w,
+    )
     return geom
+
 
 class dotdict(dict):
     """A dict with dot access and autocompletion.
@@ -83,7 +87,7 @@ class dotdict(dict):
 
     def __repr__(self):
         items = "\n\t".join([f"{k}:{v}," for k, v in self.items()])
-        return f"<DotDict>:\n\t{items}"
+        return f"<DotDict>: \n\t{items}"
 
 
 def delegates(to=None, keep=False):
