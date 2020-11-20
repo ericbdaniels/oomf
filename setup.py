@@ -14,7 +14,7 @@ setuptools.setup(
     license="MIT",
     long_description_content_type="text/markdown",
     long_description=long_description,
-    url="https://github.com/ericbdaniels/Oomf",
+    url="https://github.com/ericbdaniels/oomf",
     install_requires=[
         "pandas>=1.0.0",
         "numpy>=1.19.2" "omf==1.0.1",
