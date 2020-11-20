@@ -9,3 +9,10 @@ Goals shared ont he [OMF read the docs page](https://omf.readthedocs.io/en/lates
 OMF is based around the [properties](https://github.com/seequent/properties) project developed by Seequent, and naturally Seequent is one of the biggest supporters of OMF.
 
 This is a fantastic idea. Sharing data, geologic models, variograms etc across commercial software platforms and open source tools can be challenging. The OMF library Python API does not lack functionality but it is simply diffcult to use. OOMF is an attempt to provide a wrapper to the OMF API and making this format a bit more approachable.
+
+If you find yourself using this little tool please feel free to log any issues, contribute etc.
+
+To install:
+`pip install oomf`
+
+A short blog post with a few example: [here](https://geostats.dev/mining/omf/seequent/open%20mining%20format/geostatistics/2020/11/08/Oomf.html)
