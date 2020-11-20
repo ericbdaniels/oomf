@@ -1,2 +1,1 @@
-from .elements import Project, Element, PointSet,LineSet
-
+from .elements import Project

@@ -14,15 +14,16 @@ from . import gslib, utils
 
 class Element:
     def __init__(self, element):
-        # super().__init__(element)
         self._element = element
+        self.name = element.name
+        self.element_type = element.subtype
         self.data_names = [d.name for d in self._element.data]
         self.size = len(self._element.data[0].array) if len(self._element.data) else 0
         for d in self._element.data:
             setattr(self, d.name, d.array)
 
     def __repr__(self) -> str:
-        return f"<OOMFElement> (Name: {self.name}, Type: {self.subtype})"
+        return f"<OOMFElement> (Name: {self.name}, Type: {self.element_type})"
 
     def _calc_centroids(self):
         segments = self._element.geometry.segments.array[:]
@@ -37,7 +38,7 @@ class Element:
     def to_pandas(self, **kwargs) -> pd.DataFrame:
         data_dict = {f"{d.name}": d.array[:] for d in self._element.data}
         location_types = [d.location for d in self._element.data]
-        if self.subtype != "volume":
+        if self.element_type != "volume":
             if all(l == "segments" for l in location_types) and len(location_types):
                 x, y, z = self._calc_centroids()
                 return pd.DataFrame({"x": x, "y": y, "z": z, **data_dict}, **kwargs)
