@@ -8,6 +8,7 @@ import omfvista
 import rich
 import pandas as pd
 import numpy as np
+import itertools 
 
 from . import gslib, utils
 
@@ -34,14 +35,31 @@ class Element:
         y_centroids = np.mean([verts[:, 1][start], verts[:, 1][start]], axis=0)
         z_centroids = np.mean([verts[:, 2][start], verts[:, 2][start]], axis=0)
         return x_centroids, y_centroids, z_centroids
+    
+    def _calc_cell_centroids(self):
+        ox,oy,oz = self._element.geometry.origin
+        cumulative_x = self._element.geometry.tensor_u[:].cumsum()
+        xs = [ox+cumulative_x[i]-.5*cumulative_x[i] for i in range(cumulative_x.size)]
+        cumulative_z = self._element.geometry.tensor_v[:].cumsum()
+        zs = [oz+cumulative_z[i]-.5*cumulative_z[i] for i in range(cumulative_z.size)]
+        cumulative_y = self._element.geometry.tensor_w[:].cumsum()
+        ys = [oy+cumulative_y[i]-.5*cumulative_y[i] for i in range(cumulative_y.size)]
+        coords = np.array(list(itertools.product(xs,ys,zs)))
+        return coords[:,0], coords[:,1], coords[:,2]
 
-    def to_pandas(self, **kwargs) -> pd.DataFrame:
+    def to_pandas(self, coords=True, **kwargs) -> pd.DataFrame:
         data_dict = {f"{d.name}": d.array[:] for d in self._element.data}
         location_types = [d.location for d in self._element.data]
-        if self.element_type != "volume":
+        if self.element_type != "volume" and coords:
             if all(l == "segments" for l in location_types) and len(location_types):
                 x, y, z = self._calc_centroids()
                 return pd.DataFrame({"x": x, "y": y, "z": z, **data_dict}, **kwargs)
+
+            elif all(l == "cells" for l in location_types):
+                coords = self._calc_cell_centroids()
+                coords_dict = {"x":coords[0], "y":coords[1], "z":coords[2]}
+                return pd.DataFrame({**coords_dict, **data_dict}, **kwargs)
+
             elif all(l == "vertices" for l in location_types):
                 coords_dict = {
                     "x": self._element.geometry.vertices[:, 0],
