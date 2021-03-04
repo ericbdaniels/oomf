@@ -46,6 +46,9 @@ class Element:
         rot_matrix = np.array([geometry.axis_u, geometry.axis_v, geometry.axis_w])
         rotated_xyz = reshape_xyz.dot(rot_matrix)+geometry.origin
         return rotated_xyz[:,0], rotated_xyz[:,1], rotated_xyz[:,2]
+    
+    def _grid_dims(self):
+        return self._element.geometry.tensor_u.size, self._element.geometry.tensor_v.size, self._element.geometry.tensor_w.size
 
 
     def to_pandas(self, coords=True, **kwargs) -> pd.DataFrame:
@@ -59,6 +62,8 @@ class Element:
             elif all(l == "cells" for l in location_types):
                 coords = self._calc_cell_centroids()
                 coords_dict = {"x":coords[0], "y":coords[1], "z":coords[2]}
+                nx,ny,nz = self._grid_dims()
+                data_dict = data_dict.iloc[np.reshape(data_dict.index, [nx, ny, nz]).flatten(order="F")]
                 return pd.DataFrame({**coords_dict, **data_dict}, **kwargs)
 
             elif all(l == "vertices" for l in location_types):
@@ -164,6 +169,42 @@ class Volume(Element):
         idx = np.arange(0, x_siz * y_siz * z_siz, 1.0)
         gslib_idx = np.reshape(idx, [x_siz, y_siz, z_siz]).flatten(order="F")
         return gslib_idx
+
+    def _calc_cell_centroids(self):
+        geometry = self._element.geometry
+        x = geometry.tensor_u.cumsum() - (geometry.tensor_u*.5)
+        y = geometry.tensor_v.cumsum() - (geometry.tensor_v*.5)    
+        z = geometry.tensor_w.cumsum() - (geometry.tensor_w*.5)    
+        xyz = np.meshgrid(x, y, z, indexing='ij')
+        reshape_xyz = np.c_[xyz[0].ravel('F'), xyz[1].ravel('F'), xyz[2].ravel('F')]
+        rot_matrix = np.array([geometry.axis_u, geometry.axis_v, geometry.axis_w])
+        rotated_xyz = reshape_xyz.dot(rot_matrix)+geometry.origin
+        return rotated_xyz[:,0], rotated_xyz[:,1], rotated_xyz[:,2]
+    
+    def _grid_dims(self):
+        return self._element.geometry.tensor_u.size, self._element.geometry.tensor_v.size, self._element.geometry.tensor_w.size
+
+
+    def to_pandas(self, coords=True, **kwargs) -> pd.DataFrame:
+        data_dict = {f"{d.name}": d.array[:] for d in self._element.data}
+        location_types = [d.location for d in self._element.data]
+        if  coords:
+            if all(l == "cells" for l in location_types):
+                coords = self._calc_cell_centroids()
+                coords_dict = {"x":coords[0], "y":coords[1], "z":coords[2]}
+                nx,ny,nz = self._grid_dims()
+                data_dict = data_dict.iloc[np.reshape(data_dict.index, [nx, ny, nz]).flatten(order="F")]
+                return pd.DataFrame({**coords_dict, **data_dict}, **kwargs)
+
+            elif all(l == "vertices" for l in location_types):
+                coords_dict = {
+                    "x": self._element.geometry.vertices[:, 0],
+                    "y": self._element.geometry.vertices[:, 1],
+                    "z": self._element.geometry.vertices[:, 2],
+                }
+                return pd.DataFrame({**coords_dict, **data_dict}, **kwargs)
+        else:
+            return pd.DataFrame(data_dict, **kwargs)
 
     def to_gslib(self, filename: str, nan_value: float = -999.0):
         gslib_idx = self._get_gslib_idx()
