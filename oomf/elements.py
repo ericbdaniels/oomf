@@ -37,15 +37,16 @@ class Element:
         return x_centroids, y_centroids, z_centroids
     
     def _calc_cell_centroids(self):
-        ox,oy,oz = self._element.geometry.origin
-        cumulative_x = self._element.geometry.tensor_u[:].cumsum()
-        xs = [ox+cumulative_x[i]-.5*cumulative_x[i] for i in range(cumulative_x.size)]
-        cumulative_z = self._element.geometry.tensor_v[:].cumsum()
-        zs = [oz+cumulative_z[i]-.5*cumulative_z[i] for i in range(cumulative_z.size)]
-        cumulative_y = self._element.geometry.tensor_w[:].cumsum()
-        ys = [oy+cumulative_y[i]-.5*cumulative_y[i] for i in range(cumulative_y.size)]
-        coords = np.array(list(itertools.product(xs,ys,zs)))
-        return coords[:,0], coords[:,1], coords[:,2]
+        geometry = self._element.geometry
+        x = geometry.tensor_u.cumsum() - (geometry.tensor_u*.5)
+        y = geometry.tensor_v.cumsum() - (geometry.tensor_v*.5)    
+        z = geometry.tensor_w.cumsum() - (geometry.tensor_w*.5)    
+        xyz = np.meshgrid(x, y, z, indexing='ij')
+        reshape_xyz = np.c_[xyz[0].ravel('F'), xyz[1].ravel('F'), xyz[2].ravel('F')]
+        rot_matrix = np.array([geometry.axis_u, geometry.axis_v, geometry.axis_w])
+        rotated_xyz = reshape_xyz.dot(rot_matrix)+geometry.origin
+        return rotated_xyz[:,0], rotated_xyz[:,1], rotated_xyz[:,2]
+
 
     def to_pandas(self, coords=True, **kwargs) -> pd.DataFrame:
         data_dict = {f"{d.name}": d.array[:] for d in self._element.data}
