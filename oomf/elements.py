@@ -191,12 +191,17 @@ class Volume(Element):
         if  coords:
             if all(l == "cells" for l in location_types):
                 coords = self._calc_cell_centroids()
-                coords_dict = {"x":coords[0], "y":coords[1], "z":coords[2]}
                 nx,ny,nz = self._grid_dims()
-                data_dict = data_dict.iloc[np.reshape(data_dict.index, [nx, ny, nz]).flatten(order="F")]
-                return pd.DataFrame({**coords_dict, **data_dict}, **kwargs)
+                sort_order = np.reshape(np.arange(nx*ny*nz), [nx, ny, nz]).flatten(order="F")
+                data_df = pd.DataFrame( {**data_dict}, **kwargs).iloc[sort_order]
+                data_df["x"] = coords[0]
+                data_df["y"] = coords[1]
+                data_df["z"] = coords[2]
+                return data_df
+
 
             elif all(l == "vertices" for l in location_types):
+                # TODO: check sorting here
                 coords_dict = {
                     "x": self._element.geometry.vertices[:, 0],
                     "y": self._element.geometry.vertices[:, 1],
