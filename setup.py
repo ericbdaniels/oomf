@@ -17,7 +17,8 @@ setuptools.setup(
     url="https://github.com/ericbdaniels/oomf",
     install_requires=[
         "pandas>=1.0.0",
-        "numpy>=1.19.2" "omf==1.0.1",
+        "numpy>=1.19.2",
+        "omf==1.0.1",
         "omfvista==0.2.2",
         "rich>=9.0.0",
     ],
