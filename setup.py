@@ -10,7 +10,7 @@ setuptools.setup(
     author="Eric Daniels",
     description="Obvious Open Mining Format",
     packages=["oomf"],
-    version="0.0.11",
+    version="0.0.12",
     license="MIT",
     long_description_content_type="text/markdown",
     long_description=long_description,
