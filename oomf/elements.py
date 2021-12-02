@@ -267,7 +267,7 @@ class Project(utils.Wrapper):
         element_type_map = {
             "volume": Volume,
             "point": PointSet,
-            "color": PointSet,
+            "collar": PointSet,
             "blasthole": PointSet,
             "line": LineSet,
             "borehole": LineSet,
