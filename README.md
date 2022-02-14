@@ -15,4 +15,4 @@ If you find yourself using this little tool please feel free to log any issues, 
 To install:
 `pip install oomf`
 
-A short blog post with a few example: [here](https://geostats.dev/mining/omf/seequent/open%20mining%20format/geostatistics/2020/11/08/Oomf.html)
+A short blog post with a few examples: [here](https://geostats.dev/mining/omf/seequent/open%20mining%20format/geostatistics/2020/11/08/Oomf.html)
