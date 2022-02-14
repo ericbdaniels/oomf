@@ -1,7 +1,7 @@
 # Obvious Open Mining Format (OOMF)
 
 The Open Mining Format (OMF) is an attempt at standardizing the way mining (and more general geoscience data) is serialized and managed.
-Goals shared ont he [OMF read the docs page](https://omf.readthedocs.io/en/latest/):
+Goals shared on the [OMF read the docs page](https://omf.readthedocs.io/en/latest/):
 
 > - The goal of Open Mining Format is to standardize data formats across the mining community and promote collaboration
 > - The goal of the API library is to provide a well-documented, object-based interface for serializing OMF files
@@ -15,4 +15,4 @@ If you find yourself using this little tool please feel free to log any issues, 
 To install:
 `pip install oomf`
 
-A short blog post with a few example: [here](https://geostats.dev/mining/omf/seequent/open%20mining%20format/geostatistics/2020/11/08/Oomf.html)
+A short blog post with a few examples: [here](https://geostats.dev/mining/omf/seequent/open%20mining%20format/geostatistics/2020/11/08/Oomf.html)
